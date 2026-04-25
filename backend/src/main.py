@@ -7,7 +7,10 @@ app = FastAPI()
 # 解決 CORS 問題，允許 Vue 前端存取
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vue 預設 port
+    allow_origins=[
+        "http://localhost:5173",
+        "https://todo-app-nu-one-94.vercel.app",  # ← 你的 Vercel 網址
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
