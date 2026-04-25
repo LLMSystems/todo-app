@@ -1,0 +1,44 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'backend/**'
+
+jobs:
+  backend-quality:
+    name: Backend Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install fastapi uvicorn pytest pytest-cov httpx ruff mypy bandit
+
+      - name: Ruff lint
+        run: cd backend && ruff check .
+
+      - name: Ruff format check
+        run: cd backend && ruff format --check .
+
+      - name: mypy
+        run: cd backend && mypy src/
+
+      - name: pytest
+        run: cd backend && pytest --cov=src --cov-fail-under=80
+
+      - name: Bandit 安全掃描
+        run: cd backend && bandit -r src/ -ll
